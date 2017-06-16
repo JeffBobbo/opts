@@ -71,12 +71,22 @@ e.g., `-ab 22` would give
   }
 )
 ```
-Receiving values for options is greedy, if you want to specify a flag without a value, the value needs to come before the flag.
+Receiving values for options is greedy, if you want to specify a flag without a value, the value needs to come before the flag. Values must be separated from their flags by a space, otherwise it'll be treated as a grouped flag. Using `=` instead of a space is not supported.
 
-#### Long options
 Long options are also supported. Long options must begin with two dashes, otherwise it'll be treated as a series of grouped short options. Long options must also be at least 2 characters long.
 ```perl
 ... = opts::opts("--long-opt -s"); # valid
 ... = opts::opts("-long"); # parses to 4 short flags, `l`, `o`, `n`, `g`
 ... = opts::opts("--a"); # croaks
+```
+
+#### Option count
+The number of options received of a specific name can be checked by the `option_count` function, e.g.,
+```perl
+my $opts = opts::opts(...);
+if ($opts->option_count("file") == 0)
+{
+  print STDERR "--file is required to run this program, see `$0 --help` for information.\n";
+  exit(1);
+}
 ```
